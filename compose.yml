@@ -1,0 +1,34 @@
+services:
+  web:
+    build: ./php
+    container_name: php-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html:Z
+    depends_on:
+      - db
+    networks:
+      - php-network
+
+  db:
+    image: mysql:8.0
+    container_name: php-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: phpdb
+      MYSQL_USER: phpuser
+      MYSQL_PASSWORD: phppass
+    volumes:
+      - db-data:/var/lib/mysql:Z
+    ports:
+      - "3306:3306"
+    networks:
+      - php-network
+
+volumes:
+  db-data:
+
+networks:
+  php-network:
+    driver: bridge
